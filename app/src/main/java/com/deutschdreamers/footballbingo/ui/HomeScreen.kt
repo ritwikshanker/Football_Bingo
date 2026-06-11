@@ -30,7 +30,7 @@ val AmberDark = Color(0xFFF57F17)
 val WinGold = Color(0xFFFFD700)
 
 @Composable
-fun HomeScreen(onStartGame: (Language, Int) -> Unit) {
+fun HomeScreen(onStartGame: (Language, Int) -> Unit, onAbout: () -> Unit) {
     var selectedLanguage by remember { mutableStateOf(Language.ENGLISH) }
     var cardNumber by remember { mutableStateOf(1) }
 
@@ -39,6 +39,26 @@ fun HomeScreen(onStartGame: (Language, Int) -> Unit) {
             .fillMaxSize()
             .background(Brush.verticalGradient(listOf(GreenDark, GreenMid)))
     ) {
+        // About button top-right
+        Box(
+            modifier = Modifier
+                .statusBarsPadding()
+                .padding(12.dp)
+                .size(40.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(Color.White.copy(alpha = 0.15f))
+                .clickable(onClick = onAbout)
+                .align(Alignment.TopEnd),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "?",
+                color = Color.White,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
