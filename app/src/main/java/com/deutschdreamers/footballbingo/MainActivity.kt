@@ -4,13 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.*
+import com.deutschdreamers.footballbingo.ui.BingoScreen
+import com.deutschdreamers.footballbingo.ui.HomeScreen
 import com.deutschdreamers.footballbingo.ui.theme.FootballBingoTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,29 +15,30 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FootballBingoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                FootballBingoApp()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun FootballBingoApp() {
+    var gameState by remember { mutableStateOf<GameState?>(null) }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FootballBingoTheme {
-        Greeting("Android")
+    if (gameState == null) {
+        HomeScreen(
+            onStartGame = { language, cardNumber ->
+                gameState = GameState.create(language, cardNumber)
+            }
+        )
+    } else {
+        BingoScreen(
+            gameState = gameState!!,
+            onBack = { gameState = null },
+            onToggleSquare = { index -> gameState = gameState?.toggleSquare(index) },
+            onNewCard = { language, cardNumber ->
+                gameState = GameState.create(language, cardNumber)
+            }
+        )
     }
 }
