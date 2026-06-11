@@ -8,8 +8,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,8 +30,6 @@ import com.deutschdreamers.footballbingo.Language
 val GreenDark = Color(0xFF1B5E20)
 val GreenMid = Color(0xFF2E7D32)
 val Amber = Color(0xFFFFC107)
-val AmberDark = Color(0xFFF57F17)
-val WinGold = Color(0xFFFFD700)
 
 @Composable
 fun HomeScreen(onStartGame: (Language, Int) -> Unit, onAbout: () -> Unit) {
@@ -39,37 +41,35 @@ fun HomeScreen(onStartGame: (Language, Int) -> Unit, onAbout: () -> Unit) {
             .fillMaxSize()
             .background(Brush.verticalGradient(listOf(GreenDark, GreenMid)))
     ) {
-        // About button top-right
-        Box(
-            modifier = Modifier
-                .statusBarsPadding()
-                .padding(12.dp)
-                .size(40.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(Color.White.copy(alpha = 0.15f))
-                .clickable(onClick = onAbout)
-                .align(Alignment.TopEnd),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "?",
-                color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
                 .navigationBarsPadding()
-                .padding(horizontal = 28.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
         ) {
-            Spacer(Modifier.height(48.dp))
+            // Top row: about/info button pinned to the right
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                IconButton(onClick = onAbout) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = "About",
+                        tint = Color.White
+                    )
+                }
+            }
+
+            // Scrollable centred content
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 28.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
 
             Text(text = "⚽", fontSize = 80.sp)
             Spacer(Modifier.height(12.dp))
@@ -175,7 +175,8 @@ fun HomeScreen(onStartGame: (Language, Int) -> Unit, onAbout: () -> Unit) {
             }
 
             Spacer(Modifier.height(48.dp))
-        }
+            } // inner content Column
+        } // outer system-bar Column
     }
 }
 

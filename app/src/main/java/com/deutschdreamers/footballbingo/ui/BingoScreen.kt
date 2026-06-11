@@ -10,13 +10,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.Hyphens
@@ -48,7 +50,7 @@ fun BingoScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
+            .background(MaterialTheme.colorScheme.background)
     ) {
         BingoTopBar(
             language = gameState.language,
@@ -61,7 +63,8 @@ fun BingoScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(6.dp),
+                .padding(6.dp)
+                .navigationBarsPadding(),
             contentAlignment = Alignment.TopCenter
         ) {
             BingoGrid(
@@ -103,8 +106,7 @@ private fun BingoTopBar(
                         Language.HINDI -> "फुटबॉल बिंगो"
                     },
                     fontWeight = FontWeight.ExtraBold,
-                    fontSize = 18.sp,
-                    color = Color.White
+                    fontSize = 18.sp
                 )
                 Text(
                     text = when (language) {
@@ -113,38 +115,31 @@ private fun BingoTopBar(
                         Language.HINDI -> "कार्ड #$cardNumber"
                     },
                     fontSize = 12.sp,
-                    color = Amber
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
         },
         navigationIcon = {
-            Box(
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(Color.White.copy(alpha = 0.15f))
-                    .clickable(onClick = onBack),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "←", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back"
+                )
             }
         },
         actions = {
-            Box(
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(Color.White.copy(alpha = 0.15f))
-                    .clickable(onClick = onRefresh),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "↻", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+            IconButton(onClick = onRefresh) {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = "New card"
+                )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = GreenDark
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary,
+            navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+            actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
         ),
         modifier = Modifier.statusBarsPadding()
     )
@@ -189,26 +184,27 @@ private fun BingoCell(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val scheme = MaterialTheme.colorScheme
     val bgColor by animateColorAsState(
         when {
-            isWinning -> WinGold
-            isMarked -> GreenMid
-            else -> Color.White
+            isWinning -> scheme.secondary
+            isMarked  -> scheme.primary
+            else      -> scheme.surface
         },
         label = "cell_bg"
     )
     val borderColor by animateColorAsState(
         when {
-            isWinning -> AmberDark
-            isMarked -> GreenDark
-            else -> Color(0xFFCCCCCC)
+            isWinning -> scheme.secondary
+            isMarked  -> scheme.primaryContainer
+            else      -> scheme.outlineVariant
         },
         label = "cell_border"
     )
     val textColor = when {
-        isWinning -> Color(0xFF1A1A1A)
-        isMarked -> Color.White
-        else -> Color(0xFF1A1A1A)
+        isWinning -> scheme.onSecondary
+        isMarked  -> scheme.onPrimary
+        else      -> scheme.onSurface
     }
     val scale by animateFloatAsState(
         targetValue = if (isMarked || isWinning) 0.97f else 1f,
@@ -252,7 +248,6 @@ private fun WinDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = Color.White,
         title = {
             Text(
                 text = "🎉  BINGO!  🎉",
@@ -276,11 +271,22 @@ private fun WinDialog(
         },
         confirmButton = {
             Button(
+                onClick = onDismiss,
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(
+                    text = when (language) {
+                        Language.ENGLISH -> "Keep Playing"
+                        Language.GERMAN -> "Weiterspielen"
+                        Language.HINDI -> "खेलते रहें"
+                    },
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        },
+        dismissButton = {
+            OutlinedButton(
                 onClick = onNewCard,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Amber,
-                    contentColor = Color.Black
-                ),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
@@ -288,20 +294,7 @@ private fun WinDialog(
                         Language.ENGLISH -> "New Card"
                         Language.GERMAN -> "Neue Karte"
                         Language.HINDI -> "नया कार्ड"
-                    },
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(
-                    text = when (language) {
-                        Language.ENGLISH -> "Keep Playing"
-                        Language.GERMAN -> "Weiterspielen"
-                        Language.HINDI -> "खेलते रहें"
-                    },
-                    color = GreenDark
+                    }
                 )
             }
         }

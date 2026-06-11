@@ -124,7 +124,7 @@ fun AboutScreen(onBack: () -> Unit) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "© 2025 Deutsch Dreamers",
+                        text = "© 2026 Deutsch Dreamers",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSecondaryContainer,
                         textAlign = TextAlign.Center
