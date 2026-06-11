@@ -7,6 +7,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,7 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.Hyphens
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -55,6 +60,7 @@ fun BingoScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(6.dp),
             contentAlignment = Alignment.TopCenter
         ) {
@@ -212,7 +218,7 @@ private fun BingoCell(
 
     Box(
         modifier = modifier
-            .aspectRatio(0.78f)
+            .aspectRatio(0.7f)
             .scale(scale)
             .clip(RoundedCornerShape(6.dp))
             .background(bgColor)
@@ -222,14 +228,18 @@ private fun BingoCell(
     ) {
         Text(
             text = text,
-            fontSize = 8.5.sp,
-            lineHeight = 11.sp,
+            fontSize = 11.sp,
+            lineHeight = 14.sp,
             textAlign = TextAlign.Center,
             color = textColor,
             fontWeight = if (isMarked || isWinning) FontWeight.SemiBold else FontWeight.Normal,
-            modifier = Modifier.padding(horizontal = 3.dp, vertical = 4.dp),
+            modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
             overflow = TextOverflow.Clip,
-            maxLines = 6
+            maxLines = 6,
+            style = TextStyle(
+                hyphens = Hyphens.Auto,
+                lineBreak = LineBreak.Paragraph
+            )
         )
     }
 }
