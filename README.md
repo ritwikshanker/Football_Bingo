@@ -24,8 +24,6 @@
 | ![Home screen](/screenshots/home.png) | ![Bingo card](/screenshots/game.png) | ![Win dialog](/screenshots/win.png) |
 |      Language &amp; card picker       |          5×5 tappable grid           |         Celebration dialog          |
 
-> **To add screenshots:** run the app on a device or emulator, take screenshots of each screen, and save them to `docs/screenshots/` as `home.png`, `game.png`, and `win.png`.
-
 ---
 
 ## Features
