@@ -1,0 +1,55 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="iBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1B5E20"/>
+      <stop offset="100%" stop-color="#2E7D32"/>
+    </linearGradient>
+    <radialGradient id="iBall" cx="38%" cy="32%" r="70%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="80%" stop-color="#F2F2F2"/>
+      <stop offset="100%" stop-color="#E0E0E0"/>
+    </radialGradient>
+    <clipPath id="iClip">
+      <circle cx="256" cy="195" r="145"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background (rounded preview; Play Store applies its own squircle mask) -->
+  <rect width="512" height="512" fill="url(#iBg)" rx="90"/>
+
+  <!-- Ball drop shadow -->
+  <ellipse cx="260" cy="352" rx="120" ry="17" fill="#000000" fill-opacity="0.18"/>
+
+  <!-- Ball body -->
+  <circle cx="256" cy="195" r="145" fill="url(#iBall)" stroke="#D0D0D0" stroke-width="1.5"/>
+
+  <!-- Seam lines clipped to ball circle -->
+  <g clip-path="url(#iClip)" stroke="#111111" stroke-width="3.5" fill="none" stroke-linecap="round">
+    <line x1="256" y1="155" x2="256" y2="50"/>
+    <line x1="291" y1="175" x2="382" y2="123"/>
+    <line x1="291" y1="215" x2="382" y2="268"/>
+    <line x1="256" y1="235" x2="256" y2="340"/>
+    <line x1="221" y1="215" x2="130" y2="268"/>
+    <line x1="221" y1="175" x2="130" y2="123"/>
+  </g>
+
+  <!-- Centre hexagon patch -->
+  <polygon points="256,155 291,175 291,215 256,235 221,215 221,175" fill="#111111"/>
+
+  <!-- BINGO tiles: 5 × 66px + 4 × 6px gap = 354px total, start x=79, centre=256 -->
+  <!-- B -->
+  <rect x="79"  y="372" width="66" height="66" rx="10" fill="#FFC107"/>
+  <text x="112" y="418" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="38" fill="#1A1000" text-anchor="middle">B</text>
+  <!-- I -->
+  <rect x="151" y="372" width="66" height="66" rx="10" fill="#FFFFFF"/>
+  <text x="184" y="418" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="38" fill="#1B5E20" text-anchor="middle">I</text>
+  <!-- N -->
+  <rect x="223" y="372" width="66" height="66" rx="10" fill="#FFC107"/>
+  <text x="256" y="418" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="38" fill="#1A1000" text-anchor="middle">N</text>
+  <!-- G -->
+  <rect x="295" y="372" width="66" height="66" rx="10" fill="#FFFFFF"/>
+  <text x="328" y="418" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="38" fill="#1B5E20" text-anchor="middle">G</text>
+  <!-- O -->
+  <rect x="367" y="372" width="66" height="66" rx="10" fill="#FFC107"/>
+  <text x="400" y="418" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="38" fill="#1A1000" text-anchor="middle">O</text>
+</svg>

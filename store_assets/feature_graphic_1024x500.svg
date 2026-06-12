@@ -1,0 +1,90 @@
+<svg width="1024" height="500" viewBox="0 0 1024 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="fBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1B5E20"/>
+      <stop offset="100%" stop-color="#388E3C"/>
+    </linearGradient>
+    <radialGradient id="fBall" cx="38%" cy="32%" r="70%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="80%" stop-color="#F2F2F2"/>
+      <stop offset="100%" stop-color="#E0E0E0"/>
+    </radialGradient>
+    <radialGradient id="fGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4CAF50" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#1B5E20" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="fClip">
+      <circle cx="255" cy="220" r="155"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="500" fill="url(#fBg)"/>
+
+  <!-- Decorative sparkle dots -->
+  <circle cx="450" cy="48"  r="7" fill="#FFC107" fill-opacity="0.40"/>
+  <circle cx="970" cy="72"  r="5" fill="#FFFFFF" fill-opacity="0.25"/>
+  <circle cx="820" cy="458" r="8" fill="#FFC107" fill-opacity="0.35"/>
+  <circle cx="500" cy="470" r="4" fill="#FFFFFF" fill-opacity="0.25"/>
+
+  <!-- Glow behind ball -->
+  <ellipse cx="255" cy="220" rx="215" ry="210" fill="url(#fGlow)"/>
+
+  <!-- Ball drop shadow -->
+  <ellipse cx="258" cy="387" rx="125" ry="18" fill="#000000" fill-opacity="0.17"/>
+
+  <!-- Ball body -->
+  <circle cx="255" cy="220" r="155" fill="url(#fBall)" stroke="#D0D0D0" stroke-width="1.5"/>
+
+  <!-- Seam lines: hex r=46 from (255,220), ball r=155 -->
+  <!-- Hex vertices: top(255,174) TR(295,197) BR(295,243) bot(255,266) BL(215,243) TL(215,197) -->
+  <!-- Ball edge:   top(255,65)  TR(389,142) BR(389,298) bot(255,375) BL(121,298)  TL(121,142) -->
+  <g clip-path="url(#fClip)" stroke="#111111" stroke-width="4" fill="none" stroke-linecap="round">
+    <line x1="255" y1="174" x2="255" y2="65"/>
+    <line x1="295" y1="197" x2="389" y2="142"/>
+    <line x1="295" y1="243" x2="389" y2="298"/>
+    <line x1="255" y1="266" x2="255" y2="375"/>
+    <line x1="215" y1="243" x2="121" y2="298"/>
+    <line x1="215" y1="197" x2="121" y2="142"/>
+  </g>
+
+  <!-- Centre hexagon patch -->
+  <polygon points="255,174 295,197 295,243 255,266 215,243 215,197" fill="#111111"/>
+
+  <!-- BINGO tiles: 5 × 48px + 4 × 7px gap = 268px total, start x=121, centre=255 -->
+  <!-- B -->
+  <rect x="121" y="393" width="48" height="48" rx="7" fill="#FFC107"/>
+  <text x="145" y="428" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="27" fill="#1A1000" text-anchor="middle">B</text>
+  <!-- I -->
+  <rect x="176" y="393" width="48" height="48" rx="7" fill="#FFFFFF"/>
+  <text x="200" y="428" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="27" fill="#1B5E20" text-anchor="middle">I</text>
+  <!-- N -->
+  <rect x="231" y="393" width="48" height="48" rx="7" fill="#FFC107"/>
+  <text x="255" y="428" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="27" fill="#1A1000" text-anchor="middle">N</text>
+  <!-- G -->
+  <rect x="286" y="393" width="48" height="48" rx="7" fill="#FFFFFF"/>
+  <text x="310" y="428" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="27" fill="#1B5E20" text-anchor="middle">G</text>
+  <!-- O -->
+  <rect x="341" y="393" width="48" height="48" rx="7" fill="#FFC107"/>
+  <text x="365" y="428" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="27" fill="#1A1000" text-anchor="middle">O</text>
+
+  <!-- Right side: text block -->
+  <text x="478" y="148" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="80" fill="#FFFFFF">Football</text>
+  <text x="478" y="258" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="96" fill="#FFC107">Bingo</text>
+
+  <!-- Divider -->
+  <rect x="478" y="277" width="516" height="2" fill="#FFFFFF" fill-opacity="0.20" rx="1"/>
+
+  <!-- Tagline -->
+  <text x="478" y="320" font-family="Arial,Helvetica,sans-serif" font-size="26" fill="#FFFFFF" fill-opacity="0.82">The match-day party game</text>
+
+  <!-- Language label -->
+  <text x="478" y="364" font-family="Arial,Helvetica,sans-serif" font-size="21" fill="#FFFFFF" fill-opacity="0.58">EN  ·  DE  ·  &#x939;&#x93F;&#x928;&#x94D;&#x926;&#x940;</text>
+
+  <!-- 20 unique cards pill -->
+  <rect x="478" y="382" width="222" height="36" rx="18" fill="#FFFFFF" fill-opacity="0.13"/>
+  <text x="589" y="406" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="17" fill="#FFFFFF" text-anchor="middle">20 unique cards</text>
+
+  <!-- Branding -->
+  <text x="1008" y="486" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#FFFFFF" fill-opacity="0.32" text-anchor="end">Deutsch Dreamers</text>
+</svg>
