@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1B5E20">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Football Bingo">
+  <meta name="description" content="A party bingo game for watching football. 3 languages, 20 unique cards.">
+  <meta property="og:title" content="Football Bingo">
+  <meta property="og:description" content="A party bingo game for watching football. 3 languages, 20 unique cards.">
+  <meta property="og:type" content="website">
+  <title>Football Bingo</title>
+  <link rel="apple-touch-icon" href="../store_assets/icon_512.png">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', system-ui, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior: none;
+    }
+
+    /* ── Screens ────────────────────────────────────── */
+    .screen { display: none; flex-direction: column; min-height: 100vh; min-height: 100svh; }
+    .screen.active { display: flex; }
+
+    /* ── Home ───────────────────────────────────────── */
+    #home { background: linear-gradient(160deg, #1B5E20 0%, #2E7D32 100%); color: #fff; }
+
+    .home-top {
+      display: flex;
+      justify-content: flex-end;
+      padding: calc(env(safe-area-inset-top, 0px) + 4px) 4px 0;
+      flex-shrink: 0;
+    }
+
+    .home-scroll {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .home-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 420px;
+      width: 100%;
+      padding: 8px 28px calc(env(safe-area-inset-bottom, 0px) + 32px);
+      margin: auto 0;
+    }
+
+    .ball { font-size: 72px; line-height: 1; }
+    .home-title { font-size: 32px; font-weight: 900; text-align: center; margin-top: 10px; }
+    .home-sub { font-size: 14px; color: #FFC107; text-align: center; margin-top: 4px; margin-bottom: 36px; }
+
+    .section-lbl {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,.55);
+      align-self: flex-start;
+    }
+
+    .lang-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; width: 100%; margin-top: 12px; margin-bottom: 32px; }
+    .lang-btn {
+      background: rgba(255,255,255,.12); border: 2px solid transparent;
+      border-radius: 14px; padding: 14px 4px; color: #fff; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      transition: background .15s, border-color .15s, color .15s;
+    }
+    .lang-btn.on { background: #FFC107; border-color: #FFC107; color: #1A1000; }
+    .lang-flag { font-size: 26px; line-height: 1; }
+    .lang-name { font-size: 12px; font-weight: 600; }
+
+    .card-hint { font-size: 12px; color: rgba(255,255,255,.5); text-align: center; margin-top: 4px; margin-bottom: 14px; }
+
+    .num-picker { display: flex; align-items: center; gap: 28px; margin-bottom: 40px; }
+    .step-btn {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: rgba(255,255,255,.15); border: none; color: #fff;
+      font-size: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .step-btn:disabled { opacity: .3; cursor: default; }
+    .step-btn:not(:disabled):active { background: rgba(255,255,255,.25); }
+    .card-num { font-size: 52px; font-weight: 900; min-width: 88px; text-align: center; font-variant-numeric: tabular-nums; }
+
+    .start-btn {
+      width: 100%; height: 60px; border-radius: 30px;
+      background: #FFC107; color: #1A1000; font-size: 20px; font-weight: 700;
+      border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.2);
+    }
+    .start-btn:active { background: #FFD54F; }
+
+    .info-btn {
+      width: 44px; height: 44px; border-radius: 50%; background: transparent;
+      border: none; color: rgba(255,255,255,.8); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .info-btn:active { background: rgba(255,255,255,.1); }
+
+    /* ── Game ───────────────────────────────────────── */
+    #game { background: #F5F5F5; }
+
+    .game-header {
+      background: #2E7D32; display: flex; align-items: center; gap: 4px;
+      padding: env(safe-area-inset-top, 0px) 4px 0; height: calc(56px + env(safe-area-inset-top, 0px));
+      flex-shrink: 0; position: sticky; top: 0; z-index: 10;
+    }
+    .icon-btn {
+      width: 48px; height: 48px; border-radius: 50%;
+      border: none; background: transparent; color: #fff; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .icon-btn:active { background: rgba(255,255,255,.12); }
+    .hdr-text { flex: 1; overflow: hidden; }
+    .hdr-text h1 { font-size: 17px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hdr-text p { font-size: 12px; color: #FFC107; }
+
+    .grid-wrap {
+      flex: 1; overflow-y: auto; padding: 6px;
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
+    }
+    .bingo-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 4px; max-width: 500px; margin: 0 auto; }
+
+    .cell {
+      aspect-ratio: 1 / 1.4; border-radius: 7px; border: 1.5px solid #E0E0E0;
+      background: #fff; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; padding: 4px 3px; text-align: center;
+      font-size: clamp(8.5px, 2.5vw, 11px); line-height: 1.3;
+      overflow: hidden; hyphens: auto; overflow-wrap: break-word; word-break: break-word;
+      transition: background .15s, border-color .15s, transform .1s;
+      user-select: none; color: #1A1A1A;
+    }
+    .cell:active { transform: scale(.95); }
+    .cell.marked  { background: #2E7D32; border-color: #C8E6C9; color: #fff; font-weight: 600; }
+    .cell.winning { background: #FFC107; border-color: #FFC107; color: #1A1000; font-weight: 700; }
+
+    /* ── Win overlay ─────────────────────────────────── */
+    #win-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.5); z-index: 100;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    #win-overlay.visible { display: flex; }
+    .win-box {
+      background: #fff; border-radius: 20px; padding: 28px 24px 20px;
+      width: 100%; max-width: 320px; text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,.3);
+      animation: pop .2s ease-out;
+    }
+    @keyframes pop { from { transform: scale(.82); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .win-emoji { font-size: 40px; }
+    .win-title { font-size: 30px; font-weight: 900; margin: 8px 0 4px; }
+    .win-text  { font-size: 16px; color: #555; margin-bottom: 20px; }
+    .win-btns  { display: flex; flex-direction: column; gap: 10px; }
+    .keep-btn {
+      width: 100%; height: 48px; border-radius: 12px;
+      background: #2E7D32; color: #fff; font-size: 16px; font-weight: 700; border: none; cursor: pointer;
+    }
+    .keep-btn:active { background: #1B5E20; }
+    .new-btn {
+      width: 100%; height: 48px; border-radius: 12px;
+      background: transparent; border: 2px solid #2E7D32; color: #2E7D32;
+      font-size: 15px; font-weight: 600; cursor: pointer;
+    }
+    .new-btn:active { background: #E8F5E9; }
+
+    /* ── About dialog ────────────────────────────────── */
+    dialog {
+      border: none; border-radius: 20px; padding: 28px 24px;
+      max-width: 320px; width: calc(100% - 40px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.3); text-align: center;
+    }
+    dialog::backdrop { background: rgba(0,0,0,.5); }
+    .ab-logo { font-size: 56px; }
+    .ab-title { font-size: 22px; font-weight: 900; color: #2E7D32; margin: 8px 0 4px; }
+    .ab-ver   { font-size: 14px; color: #888; margin-bottom: 24px; }
+    .ab-card  { background: #F1F8E9; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .ab-card p { font-size: 14px; color: #555; margin-bottom: 6px; }
+    .ab-card strong { font-size: 17px; color: #2E7D32; display: block; margin-bottom: 12px; }
+    .ab-love  { font-size: 20px; }
+    .ab-desc  { font-size: 12px; color: #aaa; margin-bottom: 20px; }
+    .ab-close {
+      width: 100%; height: 44px; border-radius: 10px;
+      background: #2E7D32; color: #fff; font-size: 15px; font-weight: 600; border: none; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ HOME ══════════ -->
+<div id="home" class="screen active">
+  <div class="home-top">
+    <button class="info-btn" onclick="document.getElementById('about').showModal()" aria-label="About">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+      </svg>
+    </button>
+  </div>
+  <div class="home-scroll">
+    <div class="home-inner">
+      <div class="ball">⚽</div>
+      <h1 class="home-title" id="home-title">Football Bingo</h1>
+      <p  class="home-sub"   id="home-sub">Party Game Edition</p>
+
+      <p class="section-lbl" id="lbl-lang">LANGUAGE</p>
+      <div class="lang-row">
+        <button class="lang-btn on" onclick="pickLang('en')"><span class="lang-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><span class="lang-name">English</span></button>
+        <button class="lang-btn"   onclick="pickLang('de')"><span class="lang-flag">🇩🇪</span><span class="lang-name">Deutsch</span></button>
+        <button class="lang-btn"   onclick="pickLang('hi')"><span class="lang-flag">🇮🇳</span><span class="lang-name">हिन्दी</span></button>
+      </div>
+
+      <p class="section-lbl" id="lbl-card">CARD NUMBER</p>
+      <p class="card-hint" id="card-hint">Each number gives everyone a unique card!</p>
+      <div class="num-picker">
+        <button class="step-btn" id="btn-dec" onclick="changeCard(-1)" disabled>−</button>
+        <span   class="card-num" id="card-display">01</span>
+        <button class="step-btn" id="btn-inc" onclick="changeCard(1)">+</button>
+      </div>
+
+      <button class="start-btn" id="start-btn" onclick="startGame()">🎉&nbsp; Start Game!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ GAME ══════════ -->
+<div id="game" class="screen">
+  <header class="game-header">
+    <button class="icon-btn" onclick="goHome()" aria-label="Back">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+      </svg>
+    </button>
+    <div class="hdr-text">
+      <h1 id="game-title">Football Bingo</h1>
+      <p  id="card-ind">Card #1</p>
+    </div>
+    <button class="icon-btn" onclick="newCard()" aria-label="New card">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.65 6.35A7.958 7.958 0 0012 4C7.58 4 4 7.58 4 12s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+      </svg>
+    </button>
+  </header>
+  <div class="grid-wrap">
+    <div class="bingo-grid" id="grid"></div>
+  </div>
+</div>
+
+<!-- ══════════ WIN OVERLAY ══════════ -->
+<div id="win-overlay" role="dialog" aria-modal="true">
+  <div class="win-box">
+    <div class="win-emoji">🎉</div>
+    <h2 class="win-title">BINGO!</h2>
+    <p  class="win-text" id="win-text">You completed a line! 🎊</p>
+    <div class="win-btns">
+      <button class="keep-btn" id="keep-btn" onclick="closeWin()">Keep Playing</button>
+      <button class="new-btn"  id="new-btn"  onclick="winNewCard()">New Card</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ABOUT DIALOG ══════════ -->
+<dialog id="about">
+  <div class="ab-logo">⚽</div>
+  <h2 class="ab-title">Football Bingo</h2>
+  <p class="ab-ver">Version 1.0</p>
+  <div class="ab-card">
+    <p>Created by</p>
+    <strong>Deutsch Dreamers</strong>
+    <div class="ab-love">Made with ❤️ by 🇮🇳 in 🇩🇪</div>
+  </div>
+  <p class="ab-desc">A football bingo party game<br>for watch-along fun</p>
+  <button class="ab-close" onclick="document.getElementById('about').close()">Close</button>
+</dialog>
+
+<script>
+'use strict';
+
+// ── Language strings ─────────────────────────────────────────────────────────
+const L = {
+  en: { title:'Football Bingo', sub:'Party Game Edition', lLang:'LANGUAGE', lCard:'CARD NUMBER',
+        hint:'Each number gives everyone a unique card!', start:'🎉 Start Game!',
+        card:'Card', keep:'Keep Playing', newCard:'New Card', winMsg:'You completed a line! 🎊' },
+  de: { title:'Fußball Bingo', sub:'Party-Spiel Edition', lLang:'SPRACHE', lCard:'KARTENNUMMER',
+        hint:'Jede Nummer ergibt eine einzigartige Karte!', start:'🎉 Spiel starten!',
+        card:'Karte', keep:'Weiterspielen', newCard:'Neue Karte', winMsg:'Du hast eine Reihe! 🎊' },
+  hi: { title:'फुटबॉल बिंगो', sub:'पार्टी गेम संस्करण', lLang:'भाषा', lCard:'कार्ड नंबर',
+        hint:'हर नंबर का अलग कार्ड होगा!', start:'🎉 खेल शुरू करें!',
+        card:'कार्ड', keep:'खेलते रहें', newCard:'नया कार्ड', winMsg:'आपने बिंगो किया! 🎊' },
+};
+
+// ── Bingo items (must match BingoData.kt order exactly for card parity) ──────
+const ITEMS = {
+  en: [
+    "Wrong throw-in is called","Club mascot appears on screen","Throw-in reaches the penalty area",
+    "Free kick hits the wall","Away team's last game is mentioned","Back pass to keeper from opponent's half",
+    "Commentator makes a bad pun","Away team takes the lead","Goalkeeper makes a big save",
+    "Last time these teams met is discussed","Clear chance is missed","Penalty is awarded",
+    "Referee checks VAR","Fans display a banner","Referees consult each other",
+    "It's a draw in the second half","Three players from one team are booked","Manager / coach chews gum",
+    "Goalkeeper keeps a clean sheet","Academy graduate starts the game","Player's age is mentioned",
+    "Goal from a header","Offside claimed","Yellow card for dissent","Corner kick leads to a goal",
+    "Substitute scores","Red card shown","Ball hits the post or crossbar","Goal is disallowed",
+    "Player goes down holding their face","Commentator mispronounces a name","Long ball played over the top",
+    "Player dives in the penalty box","Manager gestures wildly from touchline","Home team equalizes",
+    "Kick-off is delayed","Injured player comes back on","Commentator uses a cliché",
+    "Handball appeal in the box","Away team wastes time","5+ minutes of injury time announced",
+    "Captain argues with referee","Shot hits the side netting","Both keepers are mentioned together",
+  ],
+  de: [
+    "Falscher Einwurf wird gepfiffen","Ein Vereinsmaskottchen ist zu sehen","Einwurf bis in den Sechzehner",
+    "Freistoß in die Mauer","Das letzte Spiel der Gastmannschaft wird erwähnt",
+    "Rückpass zum Torwart aus der gegnerischen Hälfte","Kommentator bringt ein schlechtes Wortspiel",
+    "Die Gastmannschaft geht in Führung","Jürgen Klopp macht Werbung","Gelb wegen Meckerns",
+    "Der Gäste Torhüter pariert","Das letzte Aufeinandertreffen wird thematisiert",
+    "Ein 100%iges Tor wird vergeben","Elfmeter","Der Schiri schaut sich eine Szene noch mal an",
+    "Fans hissen ein Spruchband","Die Schiedsrichter beraten sich",
+    "Es steht unentschieden in der zweiten Hälfte","Drei Spieler einer Mannschaft haben Gelb",
+    "Ein Trainer kaut Kaugummi","Ein Torhüter bewahrt eine weiße Weste",
+    "Ein Spieler aus der eigenen Jugend spielt","Das Alter eines Spielers wird erwähnt",
+    "Kopfballtor","Jemand reklamiert Abseits","Einwechslung in der 60. bis 75. Minute",
+    "Trainer wird auf die Tribüne geschickt","Rote Karte","Ball trifft Pfosten oder Latte",
+    "Tor nach Eckball","Tor wird aberkannt","Spieler täuscht eine Verletzung vor","Eigentor",
+    "Kommentator nennt eine Statistik","Verlängerung droht","Handspiel im Strafraum",
+    "Anschlusstreffer in der Nachspielzeit","Elfmeter wird gehalten","Flitzer auf dem Spielfeld",
+    "Kapitän diskutiert mit dem Schiedsrichter","Kommentator nennt den falschen Namen",
+    "Wiederholung einer umstrittenen Szene","Beide Torwarte in einem Atemzug genannt",
+    "5+ Minuten Nachspielzeit",
+  ],
+  hi: [
+    "गलत थ्रो-इन पर फाउल","क्लब का मैस्कॉट दिखा","थ्रो-इन पेनल्टी एरिया तक पहुंचा",
+    "फ्री किक दीवार में लगी","विजिटिंग टीम का पिछला मैच याद किया","गोलकीपर को बैकपास",
+    "कमेंटेटर ने बुरा जोक किया","विजिटिंग टीम ने बढ़त ली","गोलकीपर ने शानदार बचाव किया",
+    "दोनों टीमों की पिछली मुलाकात का जिक्र","पक्का मौका गंवाया","पेनल्टी मिली",
+    "रेफरी ने VAR चेक किया","दर्शकों ने बैनर लहराया","रेफरी आपस में सलाह कर रहे हैं",
+    "दूसरे हाफ में बराबरी","एक टीम को तीन येलो कार्ड","कोच गम चबा रहा है",
+    "गोलकीपर ने क्लीन शीट बनाई","अकादमी का खिलाड़ी खेला","खिलाड़ी की उम्र बताई गई",
+    "हेडर से गोल","ऑफसाइड का दावा","बहस पर येलो कार्ड","कॉर्नर से गोल",
+    "सब्स्टीट्यूट ने गोल किया","रेड कार्ड दिखाया","गेंद पोस्ट या क्रॉसबार से लगी",
+    "गोल रद्द हुआ","खिलाड़ी चेहरा पकड़कर गिरा","कमेंटेटर ने नाम गलत बोला",
+    "लंबी बॉल का प्रयास","पेनल्टी बॉक्स में खिलाड़ी गिरा","कोच ने टचलाइन पर हावभाव दिखाए",
+    "घरेलू टीम ने बराबरी की","किक-ऑफ में देरी","इंजरी टाइम में गोल",
+    "हैंडबॉल का दावा","विजिटिंग टीम ने समय बर्बाद किया","कैप्टन ने रेफरी से बहस की",
+    "कमेंटेटर ने क्लिशे बोला","5+ मिनट का इंजरी टाइम","विवादित दृश्य का रिप्ले","साइड नेट में शॉट",
+  ],
+};
+
+// ── Java-compatible seeded PRNG ───────────────────────────────────────────────
+// Replicates java.util.Random so web card #N matches Android card #N exactly.
+class JavaRandom {
+  constructor(seed) {
+    this.s = (BigInt(seed) ^ 0x5DEECE66Dn) & ((1n << 48n) - 1n);
+  }
+  _next(bits) {
+    this.s = (this.s * 0x5DEECE66Dn + 0xBn) & ((1n << 48n) - 1n);
+    return Number(this.s >> BigInt(48 - bits));
+  }
+  nextInt(bound) {
+    if ((bound & -bound) === bound) return Math.floor(bound * this._next(31) / 0x80000000);
+    let bits, val;
+    do { bits = this._next(31); val = bits % bound; }
+    while (((bits - val + bound - 1) | 0) < 0);
+    return val;
+  }
+}
+
+function generateCard(lang, num) {
+  const ordinal = { en: 0, de: 1, hi: 2 }[lang];
+  const rng = new JavaRandom(ordinal * 100000 + num);
+  const pool = [...ITEMS[lang]];
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = rng.nextInt(i + 1);
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, 25);
+}
+
+// ── Win detection ─────────────────────────────────────────────────────────────
+function winners(marked) {
+  const w = [];
+  for (let r = 0; r < 5; r++) {
+    const row = [r*5, r*5+1, r*5+2, r*5+3, r*5+4];
+    if (row.every(i => marked.has(i))) w.push(row);
+  }
+  for (let c = 0; c < 5; c++) {
+    const col = [c, c+5, c+10, c+15, c+20];
+    if (col.every(i => marked.has(i))) w.push(col);
+  }
+  [[0,6,12,18,24],[4,8,12,16,20]].forEach(d => {
+    if (d.every(i => marked.has(i))) w.push(d);
+  });
+  return w;
+}
+
+// ── State ─────────────────────────────────────────────────────────────────────
+const S = { lang: 'en', num: 1, grid: [], marked: new Set(), winLines: [], winShown: false };
+
+// ── UI ────────────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function refreshHome() {
+  const t = L[S.lang];
+  document.documentElement.lang = S.lang;
+  $('home-title').textContent = t.title;
+  $('home-sub').textContent   = t.sub;
+  $('lbl-lang').textContent   = t.lLang;
+  $('lbl-card').textContent   = t.lCard;
+  $('card-hint').textContent  = t.hint;
+  $('start-btn').textContent  = t.start;
+  $('card-display').textContent = String(S.num).padStart(2, '0');
+  $('btn-dec').disabled = S.num <= 1;
+  $('btn-inc').disabled = S.num >= 20;
+  document.querySelectorAll('.lang-btn').forEach((btn, i) => {
+    btn.classList.toggle('on', ['en','de','hi'][i] === S.lang);
+  });
+}
+
+function renderGrid() {
+  const winSet = new Set(S.winLines.flat());
+  const grid = $('grid');
+  grid.innerHTML = '';
+  S.grid.forEach((text, i) => {
+    const el = document.createElement('div');
+    el.className = 'cell' + (winSet.has(i) ? ' winning' : S.marked.has(i) ? ' marked' : '');
+    el.textContent = text;
+    el.addEventListener('click', () => tap(i));
+    grid.appendChild(el);
+  });
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+function pickLang(lang) { S.lang = lang; refreshHome(); }
+
+function changeCard(d) { S.num = Math.max(1, Math.min(20, S.num + d)); refreshHome(); }
+
+function startGame() {
+  const t = L[S.lang];
+  S.grid = generateCard(S.lang, S.num);
+  S.marked = new Set();
+  S.winLines = [];
+  S.winShown = false;
+  $('game-title').textContent = t.title;
+  $('card-ind').textContent   = t.card + ' #' + S.num;
+  renderGrid();
+  showScreen('game');
+}
+
+function goHome() {
+  $('win-overlay').classList.remove('visible');
+  showScreen('home');
+}
+
+function newCard() { S.num = (S.num % 20) + 1; startGame(); }
+
+function tap(i) {
+  if (S.marked.has(i)) S.marked.delete(i); else S.marked.add(i);
+  S.winLines = winners(S.marked);
+  renderGrid();
+  if (S.winLines.length > 0 && !S.winShown) {
+    S.winShown = true;
+    const t = L[S.lang];
+    $('win-text').textContent = t.winMsg;
+    $('keep-btn').textContent = t.keep;
+    $('new-btn').textContent  = t.newCard;
+    $('win-overlay').classList.add('visible');
+  }
+}
+
+function closeWin() { $('win-overlay').classList.remove('visible'); }
+function winNewCard() { closeWin(); newCard(); }
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+refreshHome();
+</script>
+</body>
+</html>

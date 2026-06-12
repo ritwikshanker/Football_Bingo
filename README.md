@@ -26,23 +26,23 @@
 
 ---
 
-## Download &amp; Beta
+## Play Now
 
 <p align="center">
-  <a href="https://play.google.com/store/apps/details?id=com.deutschdreamers.footballbingo">
-    <img src="https://img.shields.io/badge/Join%20Beta%20on%20Android-Google%20Play-3DDC84?logo=googleplay&logoColor=white&style=for-the-badge" alt="Join Beta on Android"/>
+  <a href="https://ritwikshanker.github.io/Football_Bingo/">
+    <img src="https://img.shields.io/badge/Play%20in%20Browser-Free%20%26%20Instant-FFC107?logo=googlechrome&logoColor=1A1000&style=for-the-badge" alt="Play in Browser"/>
   </a>
   &nbsp;
-  <a href="https://play.google.com/apps/testing/com.deutschdreamers.footballbingo">
-    <img src="https://img.shields.io/badge/Join%20Beta%20on%20Web-Google%20Play-4285F4?logo=google&logoColor=white&style=for-the-badge" alt="Join Beta on Web"/>
+  <a href="https://play.google.com/store/apps/details?id=com.deutschdreamers.footballbingo">
+    <img src="https://img.shields.io/badge/Join%20Beta%20on%20Android-Google%20Play-3DDC84?logo=googleplay&logoColor=white&style=for-the-badge" alt="Join Beta on Android"/>
   </a>
 </p>
 
 | | Link |
 |---|---|
+| 🌐 Play in browser (free, instant) | https://ritwikshanker.github.io/Football_Bingo/ |
 | 📱 Join beta on Android | https://play.google.com/store/apps/details?id=com.deutschdreamers.footballbingo |
-| 🌐 Join beta on Web | https://play.google.com/apps/testing/com.deutschdreamers.footballbingo |
-| 📦 Latest release | https://github.com/ritwikshanker/Football_Bingo/releases/latest |
+| 📦 Latest release (APK) | https://github.com/ritwikshanker/Football_Bingo/releases/latest |
 
 ---
 
@@ -107,6 +107,20 @@ Cards are deterministic: `Random(language.ordinal × 100_000 + cardNumber)` seed
 same (language, card number) pair always produces the same 5×5 grid. With 44 items choosing 25,
 there are over 1 billion possible arrangements — the 1–20 range gives practical party-sized variety
 while keeping cards reproducible across sessions and devices.
+
+## Web app (GitHub Pages)
+
+The `docs/` folder contains a single-file web version of the game hosted at
+`https://ritwikshanker.github.io/Football_Bingo/`.
+
+**To enable GitHub Pages** (one-time setup):
+1. Go to your repo → **Settings → Pages**
+2. Under *Source*, choose **Deploy from a branch**
+3. Branch: `main`, Folder: `/docs`
+4. Click **Save** — the site is live in ~60 seconds
+
+The web app uses the exact same seeded PRNG as the Android app, so card #3 in
+English produces the identical 5×5 grid on both platforms.
 
 ## Building
 
