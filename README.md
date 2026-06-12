@@ -1,16 +1,16 @@
-<p align="center">
+<p >
   <img src="store_assets/feature_graphic_1024x500.svg" alt="Football Bingo banner" width="100%"/>
 </p>
 
 <br>
 
-<p align="center">
+<p >
   <img src="store_assets/icon_512.svg" alt="Football Bingo icon" width="108" height="108"/>
 </p>
 
 <h2 align="center">Football Bingo</h2>
 
-<p align="center">
+<p >
   A party bingo game for watching football — tap squares as events happen on screen,<br>
   race your friends to complete a row, column, or diagonal first.
 </p>
@@ -19,10 +19,10 @@
 
 ## Screenshots
 
-| Home | Bingo card | Win! |
-|:----:|:----------:|:----:|
-| ![Home screen](docs/screenshots/home.png) | ![Bingo card](docs/screenshots/game.png) | ![Win dialog](docs/screenshots/win.png) |
-| Language &amp; card picker | 5×5 tappable grid | Celebration dialog |
+|                 Home                  |              Bingo card              |                Win!                 |
+|:-------------------------------------:|:------------------------------------:|:-----------------------------------:|
+| ![Home screen](/screenshots/home.png) | ![Bingo card](/screenshots/game.png) | ![Win dialog](/screenshots/win.png) |
+|      Language &amp; card picker       |          5×5 tappable grid           |         Celebration dialog          |
 
 > **To add screenshots:** run the app on a device or emulator, take screenshots of each screen, and save them to `docs/screenshots/` as `home.png`, `game.png`, and `win.png`.
 
@@ -89,12 +89,12 @@ The debug APK is written to `app/build/outputs/apk/debug/`.
 
 Ready-to-upload graphics are in `store_assets/`:
 
-| File | Dimensions | Use |
-|------|-----------|-----|
-| `icon_512.png` | 512 × 512 px | Play Store high-res icon |
-| `icon_512.svg` | scalable | Source file |
+| File                           | Dimensions    | Use                        |
+|--------------------------------|---------------|----------------------------|
+| `icon_512.png`                 | 512 × 512 px  | Play Store high-res icon   |
+| `icon_512.svg`                 | scalable      | Source file                |
 | `feature_graphic_1024x500.png` | 1024 × 500 px | Play Store feature graphic |
-| `feature_graphic_1024x500.svg` | scalable | Source file |
+| `feature_graphic_1024x500.svg` | scalable      | Source file                |
 
 ## Credits
 
