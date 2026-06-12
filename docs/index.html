@@ -169,13 +169,25 @@
     }
     .new-btn:active { background: #E8F5E9; }
 
-    /* ── About dialog ────────────────────────────────── */
+    /* ── How to Play button ──────────────────────────── */
+    .rules-link {
+      margin-top: 16px; background: transparent; border: none;
+      color: rgba(255,255,255,.65); font-size: 14px; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; padding: 8px 12px;
+      border-radius: 8px;
+    }
+    .rules-link:active { color: #fff; background: rgba(255,255,255,.1); }
+
+    /* ── About & Rules dialogs ───────────────────────── */
     dialog {
-      border: none; border-radius: 20px; padding: 28px 24px;
-      max-width: 320px; width: calc(100% - 40px);
-      box-shadow: 0 20px 60px rgba(0,0,0,.3); text-align: center;
+      border: none; border-radius: 20px; padding: 0;
+      max-width: 340px; width: calc(100% - 40px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.3);
     }
     dialog::backdrop { background: rgba(0,0,0,.5); }
+    .dlg-body { padding: 28px 24px 20px; text-align: center; }
+
+    /* About */
     .ab-logo { font-size: 56px; }
     .ab-title { font-size: 22px; font-weight: 900; color: #2E7D32; margin: 8px 0 4px; }
     .ab-ver   { font-size: 14px; color: #888; margin-bottom: 24px; }
@@ -188,6 +200,40 @@
       width: 100%; height: 44px; border-radius: 10px;
       background: #2E7D32; color: #fff; font-size: 15px; font-weight: 600; border: none; cursor: pointer;
     }
+
+    /* Rules dialog */
+    .rules-header {
+      background: linear-gradient(135deg, #1B5E20, #2E7D32);
+      border-radius: 20px 20px 0 0; padding: 24px 24px 20px; text-align: center;
+    }
+    .rules-header .rh-emoji { font-size: 40px; }
+    .rules-header h2 { color: #fff; font-size: 20px; font-weight: 900; margin-top: 6px; }
+
+    .rules-steps { padding: 16px 20px 0; list-style: none; text-align: left; }
+    .rules-steps li {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 12px 0; border-bottom: 1px solid #F0F0F0;
+    }
+    .rules-steps li:last-child { border-bottom: none; }
+    .step-num {
+      flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+      background: #2E7D32; color: #fff; font-size: 13px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; margin-top: 1px;
+    }
+    .step-text { font-size: 14px; color: #333; line-height: 1.5; }
+    .step-text b { color: #1B5E20; }
+
+    .rules-tip {
+      margin: 0 20px 16px; padding: 12px 14px; background: #FFF8E1;
+      border-radius: 10px; border-left: 3px solid #FFC107;
+      font-size: 12.5px; color: #5D4037; line-height: 1.5; text-align: left;
+    }
+    .rules-close {
+      display: block; width: calc(100% - 40px); margin: 0 20px 20px;
+      height: 44px; border-radius: 10px;
+      background: #FFC107; color: #1A1000; font-size: 15px; font-weight: 700; border: none; cursor: pointer;
+    }
+    .rules-close:active { background: #FFD54F; }
   </style>
 </head>
 <body>
@@ -223,6 +269,10 @@
       </div>
 
       <button class="start-btn" id="start-btn" onclick="startGame()">🎉&nbsp; Start Game!</button>
+      <button class="rules-link" id="rules-link" onclick="showRules()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+        <span id="rules-link-text">How to play?</span>
+      </button>
     </div>
   </div>
 </div>
@@ -263,6 +313,19 @@
   </div>
 </div>
 
+<!-- ══════════ RULES DIALOG ══════════ -->
+<dialog id="rules">
+  <div class="rules-header">
+    <div class="rh-emoji">📋</div>
+    <h2 id="rules-title">How to Play</h2>
+  </div>
+  <ol class="rules-steps" id="rules-steps">
+    <!-- filled by JS -->
+  </ol>
+  <p class="rules-tip" id="rules-tip"></p>
+  <button class="rules-close" id="rules-close" onclick="document.getElementById('rules').close()">Got it!</button>
+</dialog>
+
 <!-- ══════════ ABOUT DIALOG ══════════ -->
 <dialog id="about">
   <div class="ab-logo">⚽</div>
@@ -284,13 +347,40 @@
 const L = {
   en: { title:'Football Bingo', sub:'Party Game Edition', lLang:'LANGUAGE', lCard:'CARD NUMBER',
         hint:'Each number gives everyone a unique card!', start:'🎉 Start Game!',
-        card:'Card', keep:'Keep Playing', newCard:'New Card', winMsg:'You completed a line! 🎊' },
+        card:'Card', keep:'Keep Playing', newCard:'New Card', winMsg:'You completed a line! 🎊',
+        rulesTitle:'How to Play', rulesLink:'How to play?', rulesClose:'Got it!',
+        rulesTip:'💡 Tap any square again to un-mark it if you made a mistake.',
+        rulesSteps:[
+          ['🗣️','Pick your preferred language — <b>mixing languages is fine!</b> The events are the same in every language'],
+          ['🔢','Pick any card number (1–20). If two players use the <b>same language</b>, make sure they pick <b>different numbers</b>'],
+          ['📺','Watch the match and <b>tap a square</b> whenever that event happens on screen'],
+          ['🏆','Complete any <b>row, column, or diagonal</b> to shout <b>BINGO!</b>'],
+          ['🎯','Keep playing on the same card to aim for a <b>full house!</b>'],
+        ]},
   de: { title:'Fußball Bingo', sub:'Party-Spiel Edition', lLang:'SPRACHE', lCard:'KARTENNUMMER',
         hint:'Jede Nummer ergibt eine einzigartige Karte!', start:'🎉 Spiel starten!',
-        card:'Karte', keep:'Weiterspielen', newCard:'Neue Karte', winMsg:'Du hast eine Reihe! 🎊' },
+        card:'Karte', keep:'Weiterspielen', newCard:'Neue Karte', winMsg:'Du hast eine Reihe! 🎊',
+        rulesTitle:'Spielanleitung', rulesLink:'Wie spielt man?', rulesClose:'Verstanden!',
+        rulesTip:'💡 Tippe erneut auf ein Feld, um die Markierung zu entfernen.',
+        rulesSteps:[
+          ['🗣️','Wählt eure bevorzugte Sprache — <b>verschiedene Sprachen sind erlaubt!</b> Die Ereignisse sind in jeder Sprache dieselben'],
+          ['🔢','Wählt eine Kartennummer (1–20). Wenn zwei Spieler <b>dieselbe Sprache</b> nutzen, brauchen sie <b>verschiedene Nummern</b>'],
+          ['📺','Schaut das Spiel und <b>tippt auf ein Feld</b>, wenn dieses Ereignis passiert'],
+          ['🏆','Vervollständigt eine <b>Reihe, Spalte oder Diagonale</b> und ruft <b>BINGO!</b>'],
+          ['🎯','Spielt weiter auf derselben Karte für ein <b>volles Haus!</b>'],
+        ]},
   hi: { title:'फुटबॉल बिंगो', sub:'पार्टी गेम संस्करण', lLang:'भाषा', lCard:'कार्ड नंबर',
         hint:'हर नंबर का अलग कार्ड होगा!', start:'🎉 खेल शुरू करें!',
-        card:'कार्ड', keep:'खेलते रहें', newCard:'नया कार्ड', winMsg:'आपने बिंगो किया! 🎊' },
+        card:'कार्ड', keep:'खेलते रहें', newCard:'नया कार्ड', winMsg:'आपने बिंगो किया! 🎊',
+        rulesTitle:'कैसे खेलें?', rulesLink:'कैसे खेलें?', rulesClose:'समझ गया!',
+        rulesTip:'💡 गलती हो जाए तो दोबारा टैप करके स्क्वेयर हटाएं।',
+        rulesSteps:[
+          ['🗣️','अपनी पसंदीदा भाषा चुनें — <b>अलग-अलग भाषाएं बिल्कुल ठीक हैं!</b> घटनाएं सभी भाषाओं में एक समान हैं'],
+          ['🔢','कोई भी कार्ड नंबर चुनें (1–20)। अगर दो खिलाड़ी <b>एक ही भाषा</b> में खेलें तो <b>अलग नंबर</b> चुनें'],
+          ['📺','मैच देखें और जो घटना हो, वो <b>स्क्वेयर टैप</b> करें'],
+          ['🏆','कोई भी <b>पंक्ति, कॉलम या विकर्ण</b> पूरी करें और <b>BINGO!</b> चिल्लाएं'],
+          ['🎯','पूरा कार्ड भरें — <b>फुल हाउस</b> के लिए खेलते रहें!'],
+        ]},
 };
 
 // ── Bingo items (must match BingoData.kt order exactly for card parity) ──────
@@ -420,9 +510,25 @@ function refreshHome() {
   $('card-display').textContent = String(S.num).padStart(2, '0');
   $('btn-dec').disabled = S.num <= 1;
   $('btn-inc').disabled = S.num >= 20;
+  $('rules-link-text').textContent = t.rulesLink;
   document.querySelectorAll('.lang-btn').forEach((btn, i) => {
     btn.classList.toggle('on', ['en','de','hi'][i] === S.lang);
   });
+}
+
+function showRules() {
+  const t = L[S.lang];
+  $('rules-title').textContent = t.rulesTitle;
+  $('rules-close').textContent = t.rulesClose;
+  $('rules-tip').textContent   = t.rulesTip;
+  const ol = $('rules-steps');
+  ol.innerHTML = '';
+  t.rulesSteps.forEach(([icon, html], idx) => {
+    const li = document.createElement('li');
+    li.innerHTML = '<span class="step-num">' + (idx + 1) + '</span><span class="step-text">' + icon + '&ensp;' + html + '</span>';
+    ol.appendChild(li);
+  });
+  $('rules').showModal();
 }
 
 function renderGrid() {
