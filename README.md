@@ -1,16 +1,16 @@
-<p >
+<p align="center">
   <img src="store_assets/feature_graphic_1024x500.svg" alt="Football Bingo banner" width="100%"/>
 </p>
 
 <br>
 
-<p >
+<p align="center" >
   <img src="store_assets/icon_512.svg" alt="Football Bingo icon" width="108" height="108"/>
 </p>
 
 <h2 align="center">Football Bingo</h2>
 
-<p >
+<p align="center" >
   A party bingo game for watching football — tap squares as events happen on screen,<br>
   race your friends to complete a row, column, or diagonal first.
 </p>
@@ -29,7 +29,8 @@
 ## Features
 
 - **5×5 bingo grid** — 44 football events per language, 25 randomly drawn per card
-- **20 reproducible card numbers** — card #3 in English is always the same arrangement, so players can call out their number at a party without spoiling others
+- **20 reproducible card numbers** — card #3 in English is always the same arrangement, so players
+  can call out their number at a party without spoiling others
 - **3 languages** — English, Deutsch, हिन्दी
 - **Win detection** — rows, columns, and both diagonals; golden highlight + celebration dialog
 - **Keep playing after a line win** — chase the full house before new cards are dealt
@@ -73,7 +74,10 @@ app/src/main/java/com/deutschdreamers/footballbingo/
 
 ## Card generation
 
-Cards are deterministic: `Random(language.ordinal × 100_000 + cardNumber)` seeds the shuffle, so the same (language, card number) pair always produces the same 5×5 grid. With 44 items choosing 25, there are over 1 billion possible arrangements — the 1–20 range gives practical party-sized variety while keeping cards reproducible across sessions and devices.
+Cards are deterministic: `Random(language.ordinal × 100_000 + cardNumber)` seeds the shuffle, so the
+same (language, card number) pair always produces the same 5×5 grid. With 44 items choosing 25,
+there are over 1 billion possible arrangements — the 1–20 range gives practical party-sized variety
+while keeping cards reproducible across sessions and devices.
 
 ## Building
 
