@@ -169,6 +169,31 @@
     }
     .new-btn:active { background: #E8F5E9; }
 
+    /* Full house special styling */
+    #win-overlay.fullhouse .win-box {
+      background: linear-gradient(160deg, #FFFDE7, #FFF8E1);
+      border: 2px solid #FFC107;
+    }
+    #win-overlay.fullhouse .win-title { color: #E65100; font-size: 34px; }
+    #win-overlay.fullhouse .win-text  { color: #444; }
+    #win-overlay.fullhouse .keep-btn  { background: #FFC107; color: #1A1000; }
+    #win-overlay.fullhouse .keep-btn:active { background: #FFD54F; }
+    #win-overlay.fullhouse .new-btn   { border-color: #FFC107; color: #E65100; }
+    #win-overlay.fullhouse .new-btn:active { background: #FFF8E1; }
+
+    /* Confetti */
+    .confetti-piece {
+      position: fixed; top: -14px; pointer-events: none; z-index: 99;
+      animation: confetti-fall linear forwards;
+      border-radius: 2px;
+    }
+    @keyframes confetti-fall {
+      0%   { transform: translateY(0) rotate(0deg) scaleX(1); opacity: 1; }
+      50%  { transform: translateY(50vh) rotate(360deg) scaleX(-1); opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(105vh) rotate(720deg) scaleX(1); opacity: 0; }
+    }
+
     /* ── How to Play button ──────────────────────────── */
     .rules-link {
       margin-top: 16px; background: transparent; border: none;
@@ -347,8 +372,8 @@
 <!-- ══════════ WIN OVERLAY ══════════ -->
 <div id="win-overlay" role="dialog" aria-modal="true">
   <div class="win-box">
-    <div class="win-emoji">🎉</div>
-    <h2 class="win-title">BINGO!</h2>
+    <div class="win-emoji" id="win-emoji">🎉</div>
+    <h2 class="win-title" id="win-title">BINGO!</h2>
     <p  class="win-text" id="win-text">You completed a line! 🎊</p>
     <div class="win-btns">
       <button class="keep-btn" id="keep-btn" onclick="closeWin()">Keep Playing</button>
@@ -405,7 +430,7 @@
 const L = {
   en: { title:'Football Bingo', sub:'Party Game Edition', lLang:'LANGUAGE', lCard:'CARD NUMBER',
         hint:'Each number gives everyone a unique card!', start:'🎉 Start Game!',
-        card:'Card', keep:'Keep Playing', newCard:'New Card', winMsg:'You completed a line! 🎊',
+        card:'Card', keep:'Keep Playing', newCard:'New Card', winMsg:'You completed a line! 🎊', fullHouseMsg:'FULL HOUSE! You got them all! 🏆',
         rulesTitle:'How to Play', rulesLink:'How to play?', rulesClose:'Got it!',
         rulesTip:'💡 Tap any square again to un-mark it if you made a mistake.',
         rulesSteps:[
@@ -417,7 +442,7 @@ const L = {
         ]},
   de: { title:'Fußball Bingo', sub:'Party-Spiel Edition', lLang:'SPRACHE', lCard:'KARTENNUMMER',
         hint:'Jede Nummer ergibt eine einzigartige Karte!', start:'🎉 Spiel starten!',
-        card:'Karte', keep:'Weiterspielen', newCard:'Neue Karte', winMsg:'Du hast eine Reihe! 🎊',
+        card:'Karte', keep:'Weiterspielen', newCard:'Neue Karte', winMsg:'Du hast eine Reihe! 🎊', fullHouseMsg:'VOLLES HAUS! Alles abgehakt! 🏆',
         rulesTitle:'Spielanleitung', rulesLink:'Wie spielt man?', rulesClose:'Verstanden!',
         rulesTip:'💡 Tippe erneut auf ein Feld, um die Markierung zu entfernen.',
         rulesSteps:[
@@ -429,7 +454,7 @@ const L = {
         ]},
   hi: { title:'फुटबॉल बिंगो', sub:'पार्टी गेम संस्करण', lLang:'भाषा', lCard:'कार्ड नंबर',
         hint:'हर नंबर का अलग कार्ड होगा!', start:'🎉 खेल शुरू करें!',
-        card:'कार्ड', keep:'खेलते रहें', newCard:'नया कार्ड', winMsg:'आपने बिंगो किया! 🎊',
+        card:'कार्ड', keep:'खेलते रहें', newCard:'नया कार्ड', winMsg:'आपने बिंगो किया! 🎊', fullHouseMsg:'फुल हाउस! सारे खाने भर गए! 🏆',
         rulesTitle:'कैसे खेलें?', rulesLink:'कैसे खेलें?', rulesClose:'समझ गया!',
         rulesTip:'💡 गलती हो जाए तो दोबारा टैप करके स्क्वेयर हटाएं।',
         rulesSteps:[
@@ -464,8 +489,8 @@ const ITEMS = {
     "Freistoß in die Mauer","Das letzte Spiel der Gastmannschaft wird erwähnt",
     "Rückpass zum Torwart aus der gegnerischen Hälfte","Kommentator bringt ein schlechtes Wortspiel",
     "Die Gastmannschaft geht in Führung","Jürgen Klopp macht Werbung","Gelb wegen Meckerns",
-    "Der Gäste Torhüter pariert","Das letzte Aufeinandertreffen wird thematisiert",
-    "Ein 100%iges Tor wird vergeben","Elfmeter","Der Schiri schaut sich eine Szene noch mal an",
+    "Der Gästetorwart pariert","Das letzte Aufeinandertreffen wird thematisiert",
+    "Eine klare Torchance wird vergeben","Elfmeter","Der Schiri schaut sich eine Szene noch mal an",
     "Fans hissen ein Spruchband","Die Schiedsrichter beraten sich",
     "Es steht unentschieden in der zweiten Hälfte","Drei Spieler einer Mannschaft haben Gelb",
     "Ein Trainer kaut Kaugummi","Ein Torhüter bewahrt eine weiße Weste",
@@ -545,7 +570,7 @@ function winners(marked) {
 }
 
 // ── State ─────────────────────────────────────────────────────────────────────
-const S = { lang: 'en', num: 1, grid: [], marked: new Set(), winLines: [], winShown: false };
+const S = { lang: 'en', num: 1, grid: [], marked: new Set(), winLines: [], shownWinCount: 0 };
 
 // ── UI ────────────────────────────────────────────────────────────────────────
 const $ = id => document.getElementById(id);
@@ -612,7 +637,7 @@ function startGame() {
   S.grid = generateCard(S.lang, S.num);
   S.marked = new Set();
   S.winLines = [];
-  S.winShown = false;
+  S.shownWinCount = 0;
   $('game-title').textContent = t.title;
   $('card-ind').textContent   = t.card + ' #' + S.num;
   renderGrid();
@@ -626,17 +651,42 @@ function goHome() {
 
 function newCard() { S.num = (S.num % 20) + 1; startGame(); }
 
+function launchConfetti() {
+  const colors = ['#FFC107','#2E7D32','#F44336','#2196F3','#9C27B0','#FF5722','#FFFFFF'];
+  for (let i = 0; i < 80; i++) {
+    const el = document.createElement('div');
+    const size = 7 + Math.random() * 8;
+    el.className = 'confetti-piece';
+    el.style.cssText = [
+      `left:${Math.random() * 100}vw`,
+      `width:${size}px`,
+      `height:${size * (Math.random() > 0.5 ? 1 : 0.4)}px`,
+      `background:${colors[Math.floor(Math.random() * colors.length)]}`,
+      `animation-duration:${2.2 + Math.random() * 1.8}s`,
+      `animation-delay:${Math.random() * 0.9}s`,
+      `border-radius:${Math.random() > 0.4 ? '50%' : '2px'}`,
+    ].join(';');
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  }
+}
+
 function tap(i) {
   if (S.marked.has(i)) S.marked.delete(i); else S.marked.add(i);
   S.winLines = winners(S.marked);
   renderGrid();
-  if (S.winLines.length > 0 && !S.winShown) {
-    S.winShown = true;
+  if (S.winLines.length > S.shownWinCount) {
+    S.shownWinCount = S.winLines.length;
     const t = L[S.lang];
-    $('win-text').textContent = t.winMsg;
-    $('keep-btn').textContent = t.keep;
-    $('new-btn').textContent  = t.newCard;
+    const isFullHouse = S.marked.size === 25;
+    $('win-emoji').textContent  = isFullHouse ? '🏆' : '🎉';
+    $('win-title').textContent  = isFullHouse ? 'FULL HOUSE!' : 'BINGO!';
+    $('win-text').textContent   = isFullHouse ? t.fullHouseMsg : t.winMsg;
+    $('keep-btn').textContent   = t.keep;
+    $('new-btn').textContent    = t.newCard;
+    $('win-overlay').classList.toggle('fullhouse', isFullHouse);
     $('win-overlay').classList.add('visible');
+    if (isFullHouse) launchConfetti();
   }
 }
 
