@@ -178,11 +178,19 @@
     }
     .rules-link:active { color: #fff; background: rgba(255,255,255,.1); }
 
+    .home-footer { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
+    .home-footer a {
+      color: rgba(255,255,255,.5); font-size: 12px; text-decoration: none;
+      display: flex; align-items: center; gap: 5px; padding: 6px 8px; border-radius: 6px;
+    }
+    .home-footer a:hover, .home-footer a:active { color: #fff; background: rgba(255,255,255,.08); }
+
     /* ── About & Rules dialogs ───────────────────────── */
     dialog {
       border: none; border-radius: 20px; padding: 0;
       max-width: 340px; width: calc(100% - 40px);
       box-shadow: 0 20px 60px rgba(0,0,0,.3);
+      text-align: center;
       /* Firefox mobile doesn't auto-centre <dialog> — force it */
       position: fixed;
       top: 50%; left: 50%;
@@ -192,7 +200,18 @@
       overflow-y: auto;
     }
     dialog::backdrop { background: rgba(0,0,0,.5); }
-    .dlg-body { padding: 28px 24px 20px; text-align: center; }
+
+    /* ✕ close button — sits top-right of its relative-positioned parent */
+    .dlg-x {
+      position: absolute; top: 10px; right: 10px;
+      width: 32px; height: 32px; border-radius: 50%;
+      border: none; background: rgba(0,0,0,.07); color: #555;
+      font-size: 18px; line-height: 1; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .dlg-x:active { background: rgba(0,0,0,.15); }
+    .dlg-x-light { background: rgba(255,255,255,.2); color: #fff; }
+    .dlg-x-light:active { background: rgba(255,255,255,.35); }
 
     /* About */
     .ab-logo { font-size: 56px; }
@@ -202,7 +221,15 @@
     .ab-card p { font-size: 14px; color: #555; margin-bottom: 6px; }
     .ab-card strong { font-size: 17px; color: #2E7D32; display: block; margin-bottom: 12px; }
     .ab-love  { font-size: 20px; }
-    .ab-desc  { font-size: 12px; color: #aaa; margin-bottom: 20px; }
+    .ab-desc  { font-size: 12px; color: #aaa; margin-bottom: 14px; }
+    .ab-links { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .ab-links a {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 11px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
+      text-decoration: none;
+    }
+    .ab-link-gh  { background: #F1F8E9; color: #2E7D32; }
+    .ab-link-gp  { background: #E8F0FE; color: #1A73E8; }
     .ab-close {
       width: 100%; height: 44px; border-radius: 10px;
       background: #2E7D32; color: #fff; font-size: 15px; font-weight: 600; border: none; cursor: pointer;
@@ -280,6 +307,16 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
         <span id="rules-link-text">How to play?</span>
       </button>
+      <div class="home-footer">
+        <a href="https://github.com/ritwikshanker/Football_Bingo/releases/latest" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.66-.22.66-.48v-1.7C6.73 19.91 6.14 18 6.14 18c-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 7.43c.85.004 1.7.115 2.5.337 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.16.58.67.48C19.14 20.16 22 16.42 22 12c0-5.52-4.48-10-10-10z"/></svg>
+          Download APK
+        </a>
+        <a href="https://play.google.com/store/apps/details?id=com.deutschdreamers.footballbingo" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 20.5v-17c0-.83.94-1.3 1.6-.8l14 8.5c.6.36.6 1.24 0 1.6l-14 8.5c-.66.5-1.6.03-1.6-.8z"/></svg>
+          Google Play Beta
+        </a>
+      </div>
     </div>
   </div>
 </div>
@@ -322,7 +359,8 @@
 
 <!-- ══════════ RULES DIALOG ══════════ -->
 <dialog id="rules">
-  <div class="rules-header">
+  <div class="rules-header" style="position:relative">
+    <button class="dlg-x dlg-x-light" onclick="document.getElementById('rules').close()" aria-label="Close">&#x2715;</button>
     <div class="rh-emoji">📋</div>
     <h2 id="rules-title">How to Play</h2>
   </div>
@@ -335,16 +373,29 @@
 
 <!-- ══════════ ABOUT DIALOG ══════════ -->
 <dialog id="about">
-  <div class="ab-logo">⚽</div>
-  <h2 class="ab-title">Football Bingo</h2>
-  <p class="ab-ver">Version 1.0</p>
-  <div class="ab-card">
-    <p>Created by</p>
-    <strong>Deutsch Dreamers</strong>
-    <div class="ab-love">Made with ❤️ by 🇮🇳 in 🇩🇪</div>
+  <div style="position:relative; padding: 28px 24px 20px;">
+    <button class="dlg-x" onclick="document.getElementById('about').close()" aria-label="Close">&#x2715;</button>
+    <div class="ab-logo">⚽</div>
+    <h2 class="ab-title">Football Bingo</h2>
+    <p class="ab-ver">Version 1.0</p>
+    <div class="ab-card">
+      <p>Created by</p>
+      <strong>Deutsch Dreamers</strong>
+      <div class="ab-love">Made with ❤️ by 🇮🇳 in 🇩🇪</div>
+    </div>
+    <p class="ab-desc">A football bingo party game<br>for watch-along fun</p>
+    <div class="ab-links">
+      <a class="ab-link-gh" href="https://github.com/ritwikshanker/Football_Bingo/releases/latest" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.66-.22.66-.48v-1.7C6.73 19.91 6.14 18 6.14 18c-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 7.43c.85.004 1.7.115 2.5.337 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.16.58.67.48C19.14 20.16 22 16.42 22 12c0-5.52-4.48-10-10-10z"/></svg>
+        Download Android APK
+      </a>
+      <a class="ab-link-gp" href="https://play.google.com/store/apps/details?id=com.deutschdreamers.footballbingo" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 20.5v-17c0-.83.94-1.3 1.6-.8l14 8.5c.6.36.6 1.24 0 1.6l-14 8.5c-.66.5-1.6.03-1.6-.8z"/></svg>
+        Join Google Play Beta
+      </a>
+    </div>
+    <button class="ab-close" onclick="document.getElementById('about').close()">Close</button>
   </div>
-  <p class="ab-desc">A football bingo party game<br>for watch-along fun</p>
-  <button class="ab-close" onclick="document.getElementById('about').close()">Close</button>
 </dialog>
 
 <script>
