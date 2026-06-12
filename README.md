@@ -15,6 +15,35 @@
   race your friends to complete a row, column, or diagonal first.
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Platform-Android-3DDC84?logo=android&logoColor=white" alt="Android"/>
+  <img src="https://img.shields.io/badge/Min%20SDK-29-informational" alt="Min SDK 29"/>
+  <img src="https://img.shields.io/badge/Kotlin-2.x-7F52FF?logo=kotlin&logoColor=white" alt="Kotlin"/>
+  <img src="https://img.shields.io/badge/Jetpack%20Compose-Material%203-4285F4?logo=jetpackcompose&logoColor=white" alt="Jetpack Compose"/>
+  <img src="https://img.shields.io/badge/License-MIT-brightgreen" alt="MIT License"/>
+  <a href="https://github.com/ritwikshanker/Football_Bingo/releases/latest"><img src="https://img.shields.io/github/v/release/ritwikshanker/Football_Bingo?label=latest%20release&color=2E7D32" alt="Latest release"/></a>
+</p>
+
+---
+
+## Download &amp; Beta
+
+<p align="center">
+  <a href="https://play.google.com/store/apps/details?id=com.deutschdreamers.footballbingo">
+    <img src="https://img.shields.io/badge/Join%20Beta%20on%20Android-Google%20Play-3DDC84?logo=googleplay&logoColor=white&style=for-the-badge" alt="Join Beta on Android"/>
+  </a>
+  &nbsp;
+  <a href="https://play.google.com/apps/testing/com.deutschdreamers.footballbingo">
+    <img src="https://img.shields.io/badge/Join%20Beta%20on%20Web-Google%20Play-4285F4?logo=google&logoColor=white&style=for-the-badge" alt="Join Beta on Web"/>
+  </a>
+</p>
+
+| | Link |
+|---|---|
+| 📱 Join beta on Android | https://play.google.com/store/apps/details?id=com.deutschdreamers.footballbingo |
+| 🌐 Join beta on Web | https://play.google.com/apps/testing/com.deutschdreamers.footballbingo |
+| 📦 Latest release | https://github.com/ritwikshanker/Football_Bingo/releases/latest |
+
 ---
 
 ## Screenshots
